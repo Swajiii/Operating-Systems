@@ -9,7 +9,7 @@ typedef struct Node
     struct Node *next;
 } StackNode;
 StackNode *top;
-pthread_mutex_t stack_lock = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t stack_lock;
 void push(int v, StackNode **top);
 int pop(StackNode **top);
 int is_empty(StackNode *top);
@@ -39,7 +39,6 @@ int pop(StackNode **top)
     temp = *top;
     *top = (*top)->next;
     pthread_mutex_unlock(&stack_lock);
-
     free(temp);
     printf("Thread is running Pop() operation and value is: %d\n", data);
     return data;
@@ -69,6 +68,9 @@ int main(void)
     pthread_t threads_pop[NUM_THREADS];
     int thread_args[NUM_THREADS];
     int i, j;
+
+    pthread_mutex_init(&stack_lock, NULL);
+
     for(i=0;i<NUM_THREADS;i++){
         thread_args[i] = i;
         pthread_create(&threads_push[i],NULL,thread_push, (void *)&thread_args[i]);
