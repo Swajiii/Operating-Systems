@@ -56,7 +56,6 @@ void* thread_push(void *args)
     push(*threadId + 1, &top);
     return NULL;
 }
-// Thread's pop function
 void* thread_pop(void *args)
 {
     (void)args;

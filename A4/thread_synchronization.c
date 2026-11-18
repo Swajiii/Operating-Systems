@@ -71,7 +71,6 @@ int canEnter(Thread *me) {
 
 	int eligible;
 	int starving = 0;
-
 	if (countUnfinished(1 - lastParity) > 0) {
 		eligible = 1 - lastParity;
 	}
@@ -87,6 +86,7 @@ int canEnter(Thread *me) {
 		return 0;
 
 	Thread *best = NULL;
+
 	for (int k = 0; k < totalThreads; k++) {
 		Thread *c = &allThreads[k];
 		if (c->state != 1 || parityOf(c) != eligible)
@@ -104,12 +104,11 @@ int main(int argc, char *argv[]) {
 	}
 
 	sem_init(&running, 0, 1);
-
 	Thread *threads = NULL;
 	int threadCount = readFile(argv[1], &threads);
-
 	allThreads = threads;
 	totalThreads = threadCount;
+
 	for (int k = 0; k < threadCount; k++)
 		if (firstIndex == -1 || threads[k].startTime < threads[firstIndex].startTime)
 			firstIndex = k;
@@ -130,7 +129,6 @@ int main(int argc, char *argv[]) {
 	for (int k = 0; k < threadCount; k++)
 		if (threads[k].retVal == 0)
 			pthread_join(threads[k].handle, NULL);
-
 	sem_destroy(&running);
 	return 0;
 }
